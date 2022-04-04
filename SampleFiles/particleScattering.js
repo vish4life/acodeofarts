@@ -9,7 +9,7 @@ const settings = {
 
 const sketch = ({ width, height }) => {
   const posArray = [];
-  let circNum = 50;
+  let circNum = 45;
   for (let i = 0; i < circNum; i++) {
     let x = random.range(0, width);
     let y = random.range(0, height);
@@ -17,13 +17,13 @@ const sketch = ({ width, height }) => {
     posArray.push(new Circle(x, y));
   }
   return ({ context, width, height }) => {
-
     const bgcolor = new Circle(width, height);
-    bgcolor.color(context);
+    //bgcolor.color(context);
+    context.fillStyle = 'white';
     context.fillRect(0, 0, width, height);
-    context.fillStyle = 'gray';
+    context.fillStyle = 'black';
     context.font = '40px Helvetica Neue';
-    context.fillText("@vish4life", width - 250, height - 20);
+    context.fillText("@vish4life", width - 250, height - 50);
 
     for (let i = 0; i < posArray.length; i++) {
       const circ1 = posArray[i];
@@ -31,13 +31,18 @@ const sketch = ({ width, height }) => {
         const circ2 = posArray[j];
 
         const dist = circ1.position.getDistance(circ2.position);
+        
         if (dist > 500) continue;
         context.lineWidth = math.mapRange(dist, 0, 200, 4, 1);
         context.beginPath();
 
         context.moveTo(circ1.position.x, circ1.position.y);
         context.lineTo(circ2.position.x, circ2.position.y);
-        context.strokeStyle = 'aqua';
+        var grd1 = context.createLinearGradient(circ1.position.x,circ1.position.y,circ2.position.x,circ2.position.y);
+        grd1.addColorStop(0,'blue');
+        grd1.addColorStop(.5,'magenta');
+        grd1.addColorStop(1,'red');
+        context.strokeStyle = grd1;
         context.stroke();
       }
     }
@@ -70,7 +75,7 @@ class Circle {
   constructor(x, y) {
     this.position = new Vector(x, y);
     this.velocity = new Vector(random.range(-2, 2), random.range(-2, 2));
-    this.raidus = random.range(20, 42);
+    this.raidus = random.range(10, 40);
   }
   move() {
     this.position.x += this.velocity.x;
